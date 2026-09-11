@@ -1,0 +1,6 @@
+{
+  "name": "virginia-home-visit-logger",
+  "private": true,
+  "type": "module",
+  "dependencies": { "@aws-sdk/client-dynamodb": "^3.0.0" }
+}

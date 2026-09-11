@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://virginia-housing.marshall.mortgage/sitemap.xml

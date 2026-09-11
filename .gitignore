@@ -1,0 +1,33 @@
+# JavaScript dependencies and generated application bundles
+node_modules/
+lambda/*/node_modules/
+dist/
+
+# Generated Lambda deployment archives
+lambda/*/function.zip
+
+# Reproducible data products and large source-download cache
+data/
+public/data/
+virginia-*.json
+
+# Exported access records and temporary local investigation files
+virginia_home_logins*.csv
+temp.txt
+
+# Terraform local state, provider cache, variable values, and plan files
+infrastructure/terraform/.terraform/
+infrastructure/terraform/*.tfstate
+infrastructure/terraform/*.tfstate.*
+infrastructure/terraform/*.tfvars
+infrastructure/terraform/*.tfplan
+infrastructure/terraform/crash.log
+infrastructure/terraform/crash.*.log
+
+# Local credentials, environment settings, certificates, and OS metadata
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
