@@ -31,3 +31,9 @@ infrastructure/terraform/crash.*.log
 *.pem
 *.key
 .DS_Store
+.aws/
+credentials
+*.p12
+*.pfx
+*.crt
+*.cer

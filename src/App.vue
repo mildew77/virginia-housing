@@ -23,7 +23,7 @@ const hoveredPoint = ref(null)
 const historyPanel = ref(null)
 const affordabilityPanel = ref(null)
 const selectedAffordabilityZip = ref('')
-const loanInterestRate = ref(7)
+const loanInterestRate = ref(7.5)
 const downPaymentPercent = ref(20)
 const homeInsuranceRate = ref(0.6)
 const menuOpen = ref(false)
@@ -285,6 +285,24 @@ function closeMenu() {
   menuOpen.value = false
 }
 
+function logVisit(buttonClick) {
+  const payload = JSON.stringify({ button_click: buttonClick })
+  try {
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/visit', new Blob([payload], { type: 'application/json' }))
+      return
+    }
+    void fetch('/api/visit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: payload,
+      keepalive: true,
+    }).catch(() => {})
+  } catch {
+    // Analytics must never interrupt the site experience.
+  }
+}
+
 function switchView(view) {
   activeView.value = view
   selectedZip.value = ''
@@ -427,6 +445,7 @@ watch([loanInterestRate, downPaymentPercent, homeInsuranceRate], () => {
 
 onMounted(async () => {
   updatePageMetadata(activeView.value)
+  logVisit(false)
   try {
     const [boundaryResponse, metadataResponse, forecastResponse, affordabilityResponse] = await Promise.all([
       fetch('/data/virginia-zip-boundaries.geojson'),
@@ -539,7 +558,7 @@ onBeforeUnmount(() => map?.remove())
       <article class="source-card source-card--wide">
         <p class="source-card__eyebrow">Site usage logging</p>
         <h2>Production access records</h2>
-        <p>When this production site loads, it sends one background request that records the access time, IP address, browser user agent, and approximate location information supplied by CloudFront. Records are stored in the <code>virginia_home_logins</code> DynamoDB table and automatically expire after 90 days.</p>
+        <p>When this production site loads, it sends one background request that records the access time, IP address, browser user agent, and approximate location information supplied by CloudFront. It records <code>button_click: false</code>. Selecting the mortgage-loan link below records a separate entry with <code>button_click: true</code>. Records are stored in the <code>virginia_home_logins</code> DynamoDB table and automatically expire after 90 days.</p>
       </article>
       <article class="source-card source-card--wide">
         <p class="source-card__eyebrow">Home affordability calculation</p>
@@ -669,7 +688,7 @@ onBeforeUnmount(() => map?.remove())
   </section>
   </template>
   <footer class="loan-ad">
-    <a href="https://www.rate.com/loan-officers/marshall-hawkins-1756757" target="_blank" rel="noopener noreferrer" aria-label="Visit Marshall Hawkins at Rate for Virginia home loans">
+    <a href="https://www.rate.com/loan-officers/marshall-hawkins-1756757" target="_blank" rel="noopener noreferrer" aria-label="Visit Marshall Hawkins at Rate for Virginia home loans" @click="logVisit(true)">
       <img class="loan-ad__photo" src="/marshall-hawkins.png" alt="Marshall Hawkins" />
       <span class="loan-ad__copy">
         <strong>Marshall Hawkins</strong>

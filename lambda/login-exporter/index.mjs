@@ -12,7 +12,7 @@ const exportBucket = process.env.EXPORT_BUCKET_NAME
 const downloadUrlTtlSeconds = Number(process.env.DOWNLOAD_URL_TTL_SECONDS || 300)
 
 const columns = [
-  'request_id', 'accessed_at', 'expires_at', 'ip_address', 'user_agent',
+  'request_id', 'accessed_at', 'expires_at', 'ip_address', 'user_agent', 'button_click',
   'country_code', 'country_name', 'city', 'region_code', 'region_name',
   'postal_code', 'latitude', 'longitude', 'time_zone',
 ]
@@ -28,6 +28,7 @@ function toCsvRow(item) {
     expires_at: item.expires_at?.N || '',
     ip_address: stringValue(item.ip_address),
     user_agent: stringValue(item.user_agent),
+    button_click: item.button_click?.BOOL === true ? 'TRUE' : 'FALSE',
     country_code: stringValue(location.country_code),
     country_name: stringValue(location.country_name),
     city: stringValue(location.city),
